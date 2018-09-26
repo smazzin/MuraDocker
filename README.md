@@ -5,7 +5,7 @@ Uses [pagespeed/ngx_pagespeed image](https://hub.docker.com/r/pagespeed/nginx-pa
 ## Setup
 * Starting the project
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 
