@@ -69,6 +69,51 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 <cfset this.deferMuraJS=false>
 <cfset this.hideRestrictedNav=false>
 <cfset this.templateArray=[]>
+<cfset this.styleLookup={
+		'textAlign'='text-align',
+		'textDecoration'='text-decoration',
+		'textTransform'='text-transform',
+		'textIndent'='text-indent',
+		'textOverflow'='text-overflow',
+		'backgroundImage'='background-image',
+		'backgroundColor'='background-color',
+		'backgroundOrigin'='background-Origin',
+		'backgroundPostition'='background-postition',
+		'backgroundRepeat'='background-repeat',
+		'borderRadius'='border-radius',
+		'borderWidth'='border-width',
+		'borderStyle'='border-style',
+		'boxSizing'='box-sizing',
+		'marginTop'='margin-top',
+		'marginLeft'='margin-left',
+		'marginBottom'='margin-bottom',
+		'marginRight'='margin-right',
+		'paddingTop'='padding-top',
+		'paddingLeft'='padding-left',
+		'paddingBottom'='padding-bottom',
+		'paddingRight'='padding-right',
+		'fontFamily'='font-family',
+		'fontSize'='font-size',
+		'fontWeight'='font-weight',
+		'fontVariant'='font-variant',
+		'outlineStyle'='outline-style',
+		'outlineColor'='outline-color',
+		'outlineWidth'='outline-width',
+		'outlineOffset'='outline-offset',
+		'lineHeight'='line-height',
+		'letterSpacing'='letter-spacing',
+		'wordSpacing'='word-spacing',
+		'whiteSpace'='white-space',
+		'textShadow'='text-shadow',
+		'verticalAlign'='vertical-align',
+		'webkitTransition'='-webkit-transition',
+		'transitionTimingFunction'='transitionTimingFunction',
+		'transitionProperty'='transition-property',
+		'transitionDuration'='transition-duration',
+		'transitionDelay'='transition-delay',
+		'animationName'='animation-name',
+		'animationDuration'='animation-duration'
+	}>
 
 <!--- Set these to a boolean value to override settings.ini.cfm value--->
 <cfset this.siteIDInURLS="">
@@ -1551,9 +1596,10 @@ Display Objects
 
 	<cfset var doLayoutManagerWrapper=not arguments.include and (request.muraFrontEndRequest or request.muraDisplayObjectNestLevel) and (this.layoutmanager or objectparams.render eq 'client') and len(arguments.object)>
 
-	<cfif doLayoutManagerWrapper &&  (arguments.returnFormat eq 'struct' or not (objectParams.async and objectParams.render eq 'client' and request.returnFormat eq 'json'))>
+	<cfif doLayoutManagerWrapper &&  (request.muraDisplayObjectNestLevel or (arguments.returnFormat eq 'struct' or not (objectParams.async and objectParams.render eq 'client' and request.returnFormat eq 'json')))>
 		<cfset var managerResponse=''>
 		<cfset theContent=trim(theContent)>
+
 		<cfif objectParams.render eq 'client'>
 
 			<cfset managerResponse=variables.contentRendererUtility.renderObjectInManager(object=arguments.object,
@@ -1842,7 +1888,9 @@ Display Objects
 	<cfelseif status eq 'offline'>
 		<cfset $.noIndex()>
 		<cfset eventOutput=application.pluginManager.renderEvent("onContentOfflineRender",$)>
-		<cfheader statuscode="404" statustext="Content Not Found" />
+		<cfif $.globalConfig().getValue(property="offline404", defaultValue="true")>
+			<cfheader statuscode="404" statustext="Content Not Found" />
+		</cfif>
 		<cfif len(eventOutput)>
 		<cfoutput>#eventOutput#</cfoutput>
 		<cfelse>
@@ -3102,6 +3150,28 @@ Display Objects
 			return '';
 		}
 	}
+
+	public function renderCssStyles(styles) {
+		var returnString="";
+
+
+		if(isJSON(arguments.styles)){
+			arguments.styles=deserializeJSON(arguments.styles);
+		}
+
+		if(isStruct(arguments.styles)){
+			for(var s in arguments.styles){
+				if(structKeyExists(this.styleLookup,'#s#')){
+					returnString=returnString & ' ' & this.styleLookup['#s#'] & ':' & arguments.styles[s] & ';';
+				} else {
+					returnString=returnString & ' ' & s & ':' & arguments.styles[s] & ';';
+				}
+			}
+		}
+
+		return returnString;
+	}
 </cfscript>
+
 
 </cfcomponent>

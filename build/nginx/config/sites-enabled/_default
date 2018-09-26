@@ -29,7 +29,7 @@ server {
         access_log off; log_not_found off;
         allow 127.0.0.1;
         #deny      all;    
-        proxy_pass  http://mura_mysql_cfml:8080;
+        proxy_pass  http://mura_cfml:8080;
         include inc_lucee-proxy.conf;
     }
 
@@ -38,7 +38,7 @@ server {
         access_log off; log_not_found off;
         allow 127.0.0.1;
         #deny all;
-        proxy_pass  http://mura_mysql_cfml:8080;
+        proxy_pass  http://mura_cfml:8080;
         include inc_lucee-proxy.conf;
     }
 
@@ -49,7 +49,7 @@ server {
 
     ################### LUCEE HANDLER #####################
     location ~ (\.cfm|\.cfml|\.cfc|\.jsp|\.cfr|flex2gateway|messagebroker|flashservices|openamf)(.*)$ {
-        proxy_pass  http://mura_mysql_cfml:8080;
+        proxy_pass  http://mura_cfml:8080;
         include     inc_lucee-proxy.conf;
     }
 }

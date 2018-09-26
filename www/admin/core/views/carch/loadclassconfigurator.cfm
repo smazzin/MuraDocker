@@ -49,6 +49,8 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 	<cfparam name="rc.parentid" default="">
 	<cfparam name="rc.contenthistid" default="">
 	<cfparam name="rc.objectid" default=""/>
+	<cfparam name="rc.configuratorMode" default="frontend">
+
 	<cfset contentRendererUtility=rc.$.getBean('contentRendererUtility')>
 	<cfset rc.classid=listLast(replace(rc.classid, "\", "/", "ALL"),"/")>
 	<cfset rc.container=listLast(replace(rc.container, "\", "/", "ALL"),"/")>
@@ -59,6 +61,29 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 	<cfelse>
 		<cfset objectParams={}>
 	</cfif>
+	<cfif not (isDefined("objectParams.cssstyles") and isStruct(objectParams.cssstyles))>
+		<cfif isDefined("objectParams.cssstyles") and isJSON(objectParams.cssstyles)>
+			<cfset objectParams.cssstyles=deserializeJSON(objectParams.cssstyles)>
+		<cfelse>
+			<cfset objectParams.cssstyles={}>
+		</cfif>
+	</cfif>
+
+	<cfif not (isDefined("objectParams.metacssstyles") and isStruct(objectParams.metacssstyles))>
+		<cfif isDefined("objectParams.metacssstyles") and isJSON(objectParams.metacssstyles)>
+			<cfset objectParams.metacssstyles=deserializeJSON(objectParams.metacssstyles)>
+		<cfelse>
+			<cfset objectParams.metacssstyles={}>
+		</cfif>
+	</cfif>
+	<cfif not (isDefined("objectParams.contentcssstyles") and isStruct(objectParams.contentcssstyles))>
+		<cfif isDefined("objectParams.contentcssstyles") and isJSON(objectParams.contentcssstyles)>
+			<cfset objectParams.contentcssstyles=deserializeJSON(objectParams.contentcssstyles)>
+		<cfelse>
+			<cfset objectParams.contentcssstyles={}>
+		</cfif>
+	</cfif>
+
 	<cfset data=structNew()>
 	<cfset filefound=false>
 	<cfset $=rc.$>
@@ -105,7 +130,7 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 		</cfcase>
 		<cfdefaultcase>
 			<cfif rc.$.useLayoutManager()>
-				<cf_objectconfigurator></cf_objectconfigurator>
+				<cf_objectconfigurator basictab=false></cf_objectconfigurator>
 			<cfelse>
 				<cfoutput>
 					<div class="help-block-empty">This display object is not configurable.</div>

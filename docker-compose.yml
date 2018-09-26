@@ -1,8 +1,8 @@
-version: '3.5'
+version: '3.7'
 
 services:
   #Mura Server
-  mura_mysql_cfml:
+  mura_cfml:
     image: ortussolutions/commandbox:latest
     depends_on:
       - mura_mysql
@@ -20,7 +20,7 @@ services:
       MURA_DATASOURCE: muradb
       MURA_DATABASE: muradb
       MURA_DBTYPE: mysql
-      MURA_DBCONNECTIONSTRING: "jdbc:mysql://mura_mysql:3306/muradb?useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=true"
+      MURA_DBCONNECTIONSTRING: "jdbc:mysql://mura_mysql:3306/muradb?useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=true&useSSL=false"
       MURA_DBCLASS: com.mysql.jdbc.Driver
       MURA_DBUSERNAME: root
       MURA_DBPASSWORD: FROM_ENV
@@ -34,7 +34,7 @@ services:
     volumes:
       - ./www:/app
     ports:
-      - "8080:80"
+      - "8080:8080"
     secrets:
       - projectsecrets
       - globalsecrets
@@ -52,6 +52,7 @@ services:
 
   # NGINX Container
   nginx:
+     # Need to wait for mura to be started first
      build: ./build/nginx
      ports: 
       - "80:80"

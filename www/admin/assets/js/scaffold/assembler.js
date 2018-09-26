@@ -153,13 +153,13 @@ $( document ).ready(function() {
 					item.orderno = orderpx++;
 				}
 
-				if(item.optionlist){
-					item.optionlist = item.optionlist.split('^');
+				if(item.optionlist && item.optionlist.length && Array.isArray(item.optionlist)) {
+					item.optionlist = prop.optionlist.join("^");
+				}
+				if(item.optionvaluelist && item.optionvaluelist.length && Array.isArray(item.optionvaluelist)) {
+					item.optionvaluelist = item.optionvaluelist.join("^");
 				}
 
-				if(item.optionvaluelist){
-					item.optionvaluelist = item.optionvaluelist.split('^');
-				}
 				if(!item.rendertype || item.rendertype == ""){
 					item.rendertype = self.getRenderType( item );
 				}
@@ -490,6 +490,8 @@ $( document ).ready(function() {
 				{name:'varchar',label: 'VarChar'},
 				{name:'text',label: 'Text'},
 				{name:'int',label: 'Int'},
+				{name:'float',label: 'Float'},
+				{name:'double',label: 'Double'},
 				{name:'int',label: 'Boolean'},
 				{name:'datetime',label: 'DateTime'},
 				{name:'any',label: 'Any'}

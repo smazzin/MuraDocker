@@ -68,7 +68,7 @@
 
 	<cfsilent>
 		<cfif not IsDefined("cookie.ADMINSIDEBAR")>
-			<cfset application.utility.setCookie(name="ADMINSIDEBAR",value="off")>
+			<cfset application.utility.setCookie(name="ADMINSIDEBAR",value="off",httponly=false)>
 		</cfif>
 		<cfparam name="request.action" default="core:cplugin.plugin">
 		<cfparam name="rc.originalfuseaction" default="#listLast(listLast(request.action,":"),".")#">
@@ -302,8 +302,8 @@
 	     						<span>
 				           	<a data-alertid="#alert#" class="close alert-dismiss" data-dismiss="alert"><i class="mi-close"></i></a>
   	   						</span>
-		            </div>
-		     				#alerts['#alert#'].text#
+		     					#alerts['#alert#'].text#
+								</div>
 		     			</cfif>
      				</cfloop>
      			</cfif>

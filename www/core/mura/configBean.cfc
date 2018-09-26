@@ -194,6 +194,7 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 <cfset variables.instance.siteDir=""/>
 <cfset variables.instance.legacyAppcfcSupport=false>
 <cfset variables.instance.showUsageTags=true>
+<cfset variables.instance.offline404=true>
 
 <cffunction name="OnMissingMethod" output="false" hint="Handles missing method exceptions.">
 <cfargument name="MissingMethodName" type="string" required="true" hint="The name of the missing method." />
@@ -1975,14 +1976,17 @@ version 2 without this exception.  You may, if you choose, apply this exception 
 				<cfparam name="request.muraAppliedHandlers" default="#structNew()#">
 
 				<cfloop list="#arguments.siteid#" index="local.i">
-					<cfif structKeyExists(request.muraAppliedHandlers,'#package#.#beanName#')>
-						<cfset arguments.applyGlobal=false>
-					</cfif>
-					<cfset getBean('pluginManager').addEventHandler(component=beanInstance,siteid=local.i,applyglobal=arguments.applyGlobal)>
-					<cfset request.muraAppliedHandlers['#package#.#beanName#']=true>
-					<cfif isDefined('beanInstance.onApplicationLoad') and arguments.applyGlobal>
-						<cfset $=getBean('$').init()>
-						<cfset beanInstance.onApplicationLoad($=$,m=$,Mura=$,event=$.event())>
+					<cfif not structKeyExists(request.muraAppliedHandlers,'#local.i#_#package#.#beanName#')>
+						<cfif structKeyExists(request.muraAppliedHandlers,'#package#.#beanName#')>
+							<cfset arguments.applyGlobal=false>
+						</cfif>
+						<cfset getBean('pluginManager').addEventHandler(component=beanInstance,siteid=local.i,applyglobal=arguments.applyGlobal)>
+						<cfset request.muraAppliedHandlers['#package#.#beanName#']=true>
+						<cfset request.muraAppliedHandlers['#local.i#_#package#.#beanName#']=true>
+						<cfif isDefined('beanInstance.onApplicationLoad') and arguments.applyGlobal>
+							<cfset $=getBean('$').init()>
+							<cfset beanInstance.onApplicationLoad($=$,m=$,Mura=$,event=$.event())>
+						</cfif>
 					</cfif>
 				</cfloop>
 				<cfset commitTracepoint(tracepoint)>

@@ -75,7 +75,7 @@
   -moz-osx-font-smoothing: grayscale; }
   .mura-comments dd.mura-comment-reply:before {
     margin-right: .25em;
-    color: #f00;
+    color: #000;
     content: "\f112"; }
 
 .mura-comments dd.mura-comment-spam {
@@ -88,7 +88,7 @@
   -moz-osx-font-smoothing: grayscale; }
   .mura-comments dd.mura-comment-spam:before {
     margin-right: .25em;
-    color: #f00;
+    color: #000;
     content: "\f05e"; }
 
 .navbar-nav .nav-item:hover > .dropdown-menu {
@@ -112,6 +112,9 @@ div[data-cssclass="home-news"] {
 
 .mura-nav .active {
   color: #343a40; }
+
+.mura-nav h2 {
+  font-size: 1.5rem; }
 
 .mura-index {
   padding-top: 0;
